@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>管理员 - 模型设置</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      background-color: #4a6fa5;
+      color: white;
+      padding: 15px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #4a6fa5;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+    
+    .flash-messages {
+      margin: 20px 0;
+    }
+    
+    .success_msg {
+      background-color: #d4edda;
+      color: #155724;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    
+    .error_msg {
+      background-color: #f8d7da;
+      color: #721c24;
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
+    
+    .admin-container {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 30px;
+      margin-top: 30px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .admin-header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: #4a6fa5;
+      box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <nav>
+        <div class="logo">管理员 - 模型设置</div>
+        <div class="nav-links">
+          <a href="/chat">聊天</a>
+          <a href="/chat/recharge">充值</a>
+          <a href="/admin">管理员</a>
+          <div class="user-info">
+            <span>欢迎, <%= user.username %></span>
+            <a href="/logout" class="btn btn-sm">登出</a>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </header>
+  
+  <div class="container">
+    <% if (success_msg && success_msg.length > 0) { %>
+    <div class="flash-messages">
+      <% success_msg.forEach(function(msg) { %>
+      <div class="success_msg"><%= msg %></div>
+      <% }); %>
+    </div>
+    <% } %>
+    
+    <% if (error_msg && error_msg.length > 0) { %>
+    <div class="flash-messages">
+      <% error_msg.forEach(function(msg) { %>
+      <div class="error_msg"><%= msg %></div>
+      <% }); %>
+    </div>
+    <% } %>
+    
+    <div class="admin-container">
+      <div class="admin-header">
+        <h1>模型设置</h1>
+        <a href="/admin" class="btn">返回用户管理</a>
+      </div>
+      
+      <form action="/admin/settings" method="POST">
+        <div class="form-group">
+          <label for="apiKey">API Key</label>
+          <input type="text" id="apiKey" name="apiKey" value="<%= setting.apiKey %>" required>
+        </div>
+        <div class="form-group">
+          <label for="modelName">模型名称</label>
+          <input type="text" id="modelName" name="modelName" value="<%= setting.modelName %>" required>
+        </div>
+        <div class="form-group">
+          <label for="apiUrl">API地址</label>
+          <input type="text" id="apiUrl" name="apiUrl" value="<%= setting.apiUrl %>" required>
+        </div>
+        <div class="form-group">
+          <label for="tokenPrice">Token价格 (1元 = ? Token)</label>
+          <input type="number" id="tokenPrice" name="tokenPrice" value="<%= setting.tokenPrice %>" min="1" required>
+        </div>
+        <div class="form-group">
+          <label for="freeTokens">免费Token数量</label>
+          <input type="number" id="freeTokens" name="freeTokens" value="<%= setting.freeTokens %>" min="0" required>
+        </div>
+        <button type="submit" class="btn">保存设置</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

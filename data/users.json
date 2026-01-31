@@ -1,0 +1,12 @@
+[
+  {
+    "id": "1769745042375",
+    "username": "111",
+    "email": "YXF5201314@outlook.com",
+    "password": "$2b$10$lOJj9pkAGDcoWkuotPoCM.EQcNNdwohWcEpLnoku0qxk8MhjRRp8S",
+    "tokens": 9.9976e+61,
+    "isAdmin": true,
+    "isBanned": false,
+    "createdAt": "2026-01-30T03:50:42.375Z"
+  }
+]
