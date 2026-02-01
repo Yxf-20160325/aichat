@@ -45,6 +45,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static('public'));
 
+// Trust proxy for production environments
+app.set('trust proxy', true);
+
 // Session configuration
 app.use(session({
   secret: process.env.JWT_SECRET || 'your-secret-key',
@@ -52,7 +55,8 @@ app.use(session({
   saveUninitialized: false,
   cookie: {
     maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    secure: process.env.NODE_ENV === 'production'
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: process.env.NODE_ENV === 'production' ? 'strict' : 'lax'
   }
 }));
 
