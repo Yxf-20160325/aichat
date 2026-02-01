@@ -9,6 +9,9 @@ router.get('/', isAuthenticated, chatController.chatPage);
 // 发送消息
 router.post('/send', isAuthenticated, chatController.sendMessage);
 
+// 上传文件
+router.post('/upload', isAuthenticated, chatController.uploadFile);
+
 // 充值页面
 router.get('/recharge', isAuthenticated, chatController.rechargePage);
 
