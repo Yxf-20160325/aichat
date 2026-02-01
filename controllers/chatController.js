@@ -1,29 +1,8 @@
 const axios = require('axios');
 const User = require('../models/User');
 const Setting = require('../models/Setting');
-const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-
-// 确保上传目录存在
-const uploadDir = path.join(__dirname, '../public/uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// 配置multer存储
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
-// 创建multer实例
-const upload = multer({ storage: storage });
 
 // 聊天页面
 exports.chatPage = async (req, res) => {
@@ -174,30 +153,3 @@ exports.recharge = (req, res) => {
   res.redirect('/chat');
 };
 
-// 上传文件
-exports.uploadFile = (req, res) => {
-  upload.single('file')(req, res, function (err) {
-    if (err) {
-      console.error('文件上传失败:', err);
-      return res.json({ error: '文件上传失败' });
-    }
-    
-    if (!req.file) {
-      return res.json({ error: '请选择文件' });
-    }
-    
-    // 构建文件URL
-    const fileUrl = `/uploads/${req.file.filename}`;
-    
-    // 返回文件信息
-    res.json({
-      file: {
-        id: req.file.filename,
-        name: req.file.originalname,
-        size: req.file.size,
-        type: req.file.mimetype,
-        url: fileUrl
-      }
-    });
-  });
-};
