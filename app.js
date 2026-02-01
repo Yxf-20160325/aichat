@@ -43,6 +43,7 @@ try {
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// 静态文件服务，设置为在路由之后，这样路由会优先于静态文件
 app.use(express.static('public'));
 
 // Trust proxy for production environments
