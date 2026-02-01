@@ -1,6 +1,29 @@
 const axios = require('axios');
 const User = require('../models/User');
 const Setting = require('../models/Setting');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+
+// 确保上传目录存在
+const uploadDir = path.join(__dirname, '../public/uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// 配置multer存储
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir);
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+
+// 创建multer实例
+const upload = multer({ storage: storage });
 
 // 聊天页面
 exports.chatPage = async (req, res) => {
@@ -66,17 +89,49 @@ exports.sendMessage = async (req, res) => {
       };
     }
     
+    // 处理消息内容，特别是图片格式和编程文件
+    let processedMessage = message;
+    
+    // 检测并处理图片格式，支持[img] 链接格式
+    const imageMatches = processedMessage.match(/\[img\]\s*([^\s]+)/g);
+    if (imageMatches) {
+      imageMatches.forEach(match => {
+        const imageUrl = match.match(/\[img\]\s*([^\s]+)/)[1];
+        // 这里可以根据AI API的要求格式化图片信息
+        // 例如，对于支持多模态的API，可以将图片URL添加到消息中
+        processedMessage = processedMessage.replace(match, `图片: ${imageUrl}`);
+      });
+    }
+    
+    // 检测并处理编程文件
+    const fileMatches = processedMessage.match(/文件: ([^\s]+) \(([^)]+)\)/g);
+    if (fileMatches) {
+      fileMatches.forEach(match => {
+        const fileName = match.match(/文件: ([^\s]+) \(([^)]+)\)/)[1];
+        const fileUrl = match.match(/文件: ([^\s]+) \(([^)]+)\)/)[2];
+        
+        // 检查文件扩展名，判断是否为编程文件
+        const fileExt = path.extname(fileName).toLowerCase();
+        const programmingExtensions = ['.js', '.jsx', '.ts', '.tsx', '.html', '.css', '.scss', '.json', '.xml', '.yaml', '.yml', '.py', '.java', '.c', '.cpp', '.cs', '.go', '.rb', '.php', '.swift', '.kt', '.rs', '.sh', '.bat'];
+        
+        if (programmingExtensions.includes(fileExt)) {
+          // 对于编程文件，添加文件类型信息
+          processedMessage = processedMessage.replace(match, `编程文件(${path.basename(fileName, fileExt)}): ${fileUrl}`);
+        }
+      });
+    }
+    
     // 调用AI API
     const response = await axios.post(setting.apiUrl || process.env.API_URL, {
       model: setting.modelName || process.env.MODEL_NAME,
       messages: [
         {
           role: 'system',
-          content: '你是一个智能助手，帮助用户解答问题。'
+          content: '你是一个智能助手，帮助用户解答问题。如果用户发送了图片，请对图片内容进行描述和分析。'
         },
         {
           role: 'user',
-          content: message
+          content: processedMessage
         }
       ],
       max_tokens: 1000,
@@ -117,4 +172,32 @@ exports.rechargePage = (req, res) => {
 exports.recharge = (req, res) => {
   req.flash('success_msg', '充值功能暂未开放，请联系管理员手动充值');
   res.redirect('/chat');
+};
+
+// 上传文件
+exports.uploadFile = (req, res) => {
+  upload.single('file')(req, res, function (err) {
+    if (err) {
+      console.error('文件上传失败:', err);
+      return res.json({ error: '文件上传失败' });
+    }
+    
+    if (!req.file) {
+      return res.json({ error: '请选择文件' });
+    }
+    
+    // 构建文件URL
+    const fileUrl = `/uploads/${req.file.filename}`;
+    
+    // 返回文件信息
+    res.json({
+      file: {
+        id: req.file.filename,
+        name: req.file.originalname,
+        size: req.file.size,
+        type: req.file.mimetype,
+        url: fileUrl
+      }
+    });
+  });
 };
