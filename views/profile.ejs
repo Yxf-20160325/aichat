@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的 - 11</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    header {
+      background-color: #4a6fa5;
+      color: white;
+      padding: 15px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+    }
+    
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #4a6fa5;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+    
+    .main-container {
+      flex: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 20px;
+    }
+    
+    .profile-container {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 30px;
+      margin-bottom: 20px;
+    }
+    
+    .profile-header {
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .profile-header h1 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+    
+    .profile-info {
+      margin-bottom: 40px;
+    }
+    
+    .profile-info h2 {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20px;
+      border-left: 4px solid #4a6fa5;
+      padding-left: 10px;
+    }
+    
+    .info-item {
+      display: flex;
+      margin-bottom: 15px;
+    }
+    
+    .info-label {
+      width: 120px;
+      font-weight: bold;
+      color: #666;
+    }
+    
+    .info-value {
+      flex: 1;
+      color: #333;
+    }
+    
+    .form-section {
+      margin-bottom: 40px;
+    }
+    
+    .form-section h2 {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20px;
+      border-left: 4px solid #4a6fa5;
+      padding-left: 10px;
+    }
+    
+    .form-group {
+      margin-bottom: 15px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #666;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: #4a6fa5;
+      box-shadow: 0 0 0 2px rgba(74, 111, 165, 0.2);
+    }
+    
+    .form-actions {
+      margin-top: 20px;
+    }
+    
+    .btn-primary {
+      background-color: #4a6fa5;
+      color: white;
+    }
+    
+    .btn-primary:hover {
+      background-color: #3a5a85;
+    }
+    
+    .btn-danger {
+      background-color: #dc3545;
+      color: white;
+    }
+    
+    .btn-danger:hover {
+      background-color: #c82333;
+    }
+    
+    .alert {
+      padding: 10px;
+      border-radius: 4px;
+      margin-bottom: 20px;
+    }
+    
+    .alert-success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    
+    .alert-danger {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    
+    .alert-warning {
+      background-color: #fff3cd;
+      color: #856404;
+      border: 1px solid #ffeaa7;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">11</div>
+      <div class="nav-links">
+        <a href="/chat">聊天</a>
+        <a href="/chat/recharge">充值</a>
+        <a href="/profile">我的</a>
+        <% if (user.isAdmin) { %>
+        <a href="/admin">管理员</a>
+        <% } %>
+        <div class="user-info">
+          <span>欢迎, <%= user.username %></span>
+          <a href="/logout" class="btn btn-sm">登出</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  
+  <div class="main-container">
+    <div class="profile-container">
+      <div class="profile-header">
+        <h1>个人中心</h1>
+      </div>
+      
+      <!-- 消息提示 -->
+      <% if (success_msg) { %>
+      <div class="alert alert-success">
+        <%= success_msg %>
+      </div>
+      <% } %>
+      <% if (error_msg) { %>
+      <div class="alert alert-danger">
+        <%= error_msg %>
+      </div>
+      <% } %>
+      
+      <!-- 用户信息 -->
+      <div class="profile-info">
+        <h2>基本信息</h2>
+        <div class="info-item">
+          <div class="info-label">用户名:</div>
+          <div class="info-value"><%= user.username %></div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">用户ID:</div>
+          <div class="info-value"><%= user.id %></div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">邮箱:</div>
+          <div class="info-value"><%= user.email %></div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">注册时间:</div>
+          <div class="info-value"><%= new Date(user.createdAt).toLocaleString() %></div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">剩余Token:</div>
+          <div class="info-value"><%= user.tokens %></div>
+        </div>
+      </div>
+      
+      <!-- 修改密码 -->
+      <div class="form-section">
+        <h2>修改密码</h2>
+        <form action="/profile/change-password" method="POST">
+          <div class="form-group">
+            <label for="current-password">当前密码:</label>
+            <input type="password" id="current-password" name="currentPassword" required>
+          </div>
+          <div class="form-group">
+            <label for="new-password">新密码:</label>
+            <input type="password" id="new-password" name="newPassword" required>
+          </div>
+          <div class="form-group">
+            <label for="confirm-password">确认新密码:</label>
+            <input type="password" id="confirm-password" name="confirmPassword" required>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">修改密码</button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- 修改邮箱 -->
+      <div class="form-section">
+        <h2>修改邮箱</h2>
+        <form action="/profile/change-email" method="POST">
+          <div class="form-group">
+            <label for="current-email">当前邮箱:</label>
+            <input type="email" id="current-email" name="currentEmail" required>
+          </div>
+          <div class="form-group">
+            <label for="new-email">新邮箱:</label>
+            <input type="email" id="new-email" name="newEmail" required>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">修改邮箱</button>
+          </div>
+        </form>
+      </div>
+      
+      <!-- 注销账户 -->
+      <div class="form-section">
+        <h2>注销账户</h2>
+        <p>注销账户后，您的所有数据将被永久删除，无法恢复。请谨慎操作。</p>
+        <form action="/profile/delete-account" method="POST" onsubmit="return confirm('确定要注销账户吗？此操作不可恢复。');">
+          <div class="form-group">
+            <label for="confirm-username">请输入用户名确认:</label>
+            <input type="text" id="confirm-username" name="confirmUsername" required>
+          </div>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-danger">注销账户</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
