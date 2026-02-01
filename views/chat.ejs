@@ -281,6 +281,7 @@
       display: flex;
       gap: 10px;
       border-top: 1px solid #ddd;
+      align-items: center;
     }
     
     .chat-footer input {
@@ -310,6 +311,87 @@
     
     .chat-footer button:hover {
       background-color: #3a5a85;
+    }
+    
+    .file-upload-btn {
+      position: relative;
+      overflow: hidden;
+      display: inline-block;
+    }
+    
+    .file-upload-btn input[type="file"] {
+      position: absolute;
+      top: 0;
+      right: 0;
+      min-width: 100%;
+      min-height: 100%;
+      font-size: 100px;
+      text-align: right;
+      filter: alpha(opacity=0);
+      opacity: 0;
+      outline: none;
+      cursor: pointer;
+      display: block;
+    }
+    
+    .upload-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: #f0f0f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    
+    .upload-icon:hover {
+      background-color: #e0e0e0;
+    }
+    
+    .image-preview {
+      max-width: 100%;
+      max-height: 300px;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+    
+    .uploaded-file {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+    
+    .uploaded-file .file-info {
+      flex: 1;
+    }
+    
+    .uploaded-file .file-name {
+      font-weight: bold;
+      color: #333;
+    }
+    
+    .uploaded-file .file-size {
+      font-size: 12px;
+      color: #666;
+    }
+    
+    .uploaded-file .remove-file {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 5px 10px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    
+    .uploaded-file .remove-file:hover {
+      background-color: #c82333;
     }
     
     .loading-message {
@@ -411,6 +493,15 @@
         const codeContent = content.replace('``{代码格式}', '').trim();
         processedContent = `<div class="code-block">${codeContent}</div>`;
       }
+      // 检测图片格式: [img] 链接 格式 或 图片: 链接 格式
+      else if (content.match(/\[img\]\s*[^\s]+/) || content.match(/图片:\s*`?[^`]+`?/)) {
+        console.log('检测到图片格式:', content);
+        // 支持 [img] 链接 格式（直接在[img]后跟上链接）
+        processedContent = content.replace(/\[img\]\s*([^\s]+)/g, '<img src="$1" alt="Image" class="image-preview">');
+        // 支持 图片: 链接 格式（后端转换后的格式）
+        processedContent = processedContent.replace(/图片:\s*`?([^`\s]+)`?/g, '<img src="$1" alt="Image" class="image-preview">');
+        console.log('处理后:', processedContent);
+      }
       // 检测Markdown格式
       else if (content.includes('# ') || content.includes('**') || content.includes('* ') || content.includes('> ') || content.includes('```')) {
         processedContent = `<div class="markdown-content">${processMarkdown(content)}</div>`;
@@ -456,9 +547,18 @@
         // 引用
         .replace(/^> (.*$)/gm, '<blockquote>$1</blockquote>')
         // 行内代码
-        .replace(/`(.*?)`/g, '<code>$1</code>')
-        // 段落
-        .replace(/^(?!<h[1-6]>)(?!<ul>)(?!<blockquote>)(?!<div class="code-block">)(.*$)/gm, '<p>$1</p>');
+        .replace(/`(.*?)`/g, '<code>$1</code>');
+      
+      // 处理段落 - 只在需要时添加<p>标签，避免额外换行
+      // 首先将连续的非空行合并为段落
+      const paragraphs = processedText.split(/\n\s*\n/).filter(p => p.trim());
+      processedText = paragraphs.map(paragraph => {
+        // 检查段落是否已经被包装在其他标签中
+        if (paragraph.match(/^<(h[1-6]|ul|blockquote|div)/)) {
+          return paragraph;
+        }
+        return `<p>${paragraph}</p>`;
+      }).join('');
       
       // 恢复代码块
       codeBlocks.forEach((code, index) => {
@@ -500,6 +600,8 @@
     // 发送消息
     function sendMessage() {
       const message = messageInput.value.trim();
+      
+      // 检查是否有消息
       if (!message) return;
       
       // 添加用户消息
@@ -522,7 +624,9 @@
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ message: message })
+        body: JSON.stringify({ 
+          message: message
+        })
       })
       .then(response => response.json())
       .then(data => {
