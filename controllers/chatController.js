@@ -37,13 +37,23 @@ exports.sendMessage = async (req, res) => {
   const { message } = req.body;
   
   try {
+    console.log('sendMessage called');
+    console.log('req.user:', req.user);
+    console.log('req.user.id:', req.user.id);
+    
     // 获取用户信息
     const user = await User.findById(req.user.id);
+    console.log('User found:', user);
+    console.log('User tokens:', user.tokens);
+    console.log('User tokens <= 0:', user.tokens <= 0);
     
     // 检查用户token是否足够
     if (user.tokens <= 0) {
-      return res.json({ error: '您的token不足，请联系管理员充值' });
+      console.log('Token check failed: tokens <= 0');
+      return res.json({ error: 'err412 你的账户余额不足' });
     }
+    console.log('Token check passed: tokens > 0');
+
     
     // 获取系统设置
     let setting = await Setting.findOne();
@@ -82,8 +92,10 @@ exports.sendMessage = async (req, res) => {
     const usedTokens = Math.ceil((message.length + response.data.choices[0].message.content.length) / 4);
     
     // 扣除用户token
+    console.log('Deducting tokens:', usedTokens);
     user.tokens = Math.max(0, user.tokens - usedTokens);
     await user.save();
+    console.log('Tokens after deduction:', user.tokens);
     
     res.json({ 
       response: response.data.choices[0].message.content,
