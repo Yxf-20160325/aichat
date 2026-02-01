@@ -85,9 +85,11 @@ app.use((req, res, next) => {
 const authRoutes = require('./routes/auth');
 const chatRoutes = require('./routes/chat');
 const adminRoutes = require('./routes/admin');
+const profileRoutes = require('./routes/profile');
 
 app.use('/', authRoutes);
 app.use('/chat', chatRoutes);
+app.use('/profile', profileRoutes);
 app.use('/admin', adminRoutes);
 
 // 404 handler
