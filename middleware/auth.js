@@ -1,5 +1,9 @@
 // 检查用户是否已登录
 exports.isAuthenticated = (req, res, next) => {
+  console.log('isAuthenticated called');
+  console.log('req.isAuthenticated():', req.isAuthenticated());
+  console.log('req.user:', req.user);
+  
   if (req.isAuthenticated()) {
     // 检查用户是否被封禁
     if (req.user.isBanned) {
@@ -15,8 +19,10 @@ exports.isAuthenticated = (req, res, next) => {
         return res.redirect('/login');
       }
     }
+    console.log('Authentication passed');
     return next();
   }
+  console.log('Authentication failed');
   req.flash('error_msg', '请先登录');
   res.redirect('/login');
 };
