@@ -216,7 +216,65 @@
       color: #856404;
       border: 1px solid #ffeaa7;
     }
+    
+    /* 展开/折叠功能 */
+    .expandable-section {
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .expandable-header {
+      background-color: #f8f9fa;
+      padding: 15px 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #ddd;
+    }
+    
+    .expandable-header:hover {
+      background-color: #e9ecef;
+    }
+    
+    .expandable-header h2 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      border-left: 3px solid #4a6fa5;
+      padding-left: 10px;
+    }
+    
+    .expandable-icon {
+      font-size: 14px;
+      transition: transform 0.3s ease;
+    }
+    
+    .expandable-section.expanded .expandable-icon {
+      transform: rotate(180deg);
+    }
+    
+    .expandable-content {
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+    }
+    
+    .expandable-section.expanded .expandable-content {
+      padding: 20px;
+      max-height: 500px;
+    }
   </style>
+  <script>
+    // 展开/折叠功能
+    function toggleExpand(element) {
+      element.classList.toggle('expanded');
+    }
+  </script>
 </head>
 <body>
   <header>
@@ -226,6 +284,7 @@
         <a href="/chat">聊天</a>
         <a href="/chat/recharge">充值</a>
         <a href="/profile">我的</a>
+        <a href="/about">关于</a>
         <% if (user.isAdmin) { %>
         <a href="/admin">管理员</a>
         <% } %>
@@ -281,60 +340,105 @@
       </div>
       
       <!-- 修改密码 -->
-      <div class="form-section">
-        <h2>修改密码</h2>
-        <form action="/profile/change-password" method="POST">
-          <div class="form-group">
-            <label for="current-password">当前密码:</label>
-            <input type="password" id="current-password" name="currentPassword" required>
-          </div>
-          <div class="form-group">
-            <label for="new-password">新密码:</label>
-            <input type="password" id="new-password" name="newPassword" required>
-          </div>
-          <div class="form-group">
-            <label for="confirm-password">确认新密码:</label>
-            <input type="password" id="confirm-password" name="confirmPassword" required>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary">修改密码</button>
-          </div>
-        </form>
+      <div class="expandable-section">
+        <div class="expandable-header">
+          <h2>修改密码</h2>
+          <span class="expandable-icon">▼</span>
+        </div>
+        <div class="expandable-content">
+          <form action="/profile/change-password" method="POST">
+            <div class="form-group">
+              <label for="current-password">当前密码:</label>
+              <input type="password" id="current-password" name="currentPassword" required>
+            </div>
+            <div class="form-group">
+              <label for="new-password">新密码:</label>
+              <input type="password" id="new-password" name="newPassword" required>
+            </div>
+            <div class="form-group">
+              <label for="confirm-password">确认新密码:</label>
+              <input type="password" id="confirm-password" name="confirmPassword" required>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">修改密码</button>
+            </div>
+          </form>
+        </div>
       </div>
       
       <!-- 修改邮箱 -->
-      <div class="form-section">
-        <h2>修改邮箱</h2>
-        <form action="/profile/change-email" method="POST">
-          <div class="form-group">
-            <label for="current-email">当前邮箱:</label>
-            <input type="email" id="current-email" name="currentEmail" required>
-          </div>
-          <div class="form-group">
-            <label for="new-email">新邮箱:</label>
-            <input type="email" id="new-email" name="newEmail" required>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="btn btn-primary">修改邮箱</button>
-          </div>
-        </form>
+      <div class="expandable-section">
+        <div class="expandable-header">
+          <h2>修改邮箱</h2>
+          <span class="expandable-icon">▼</span>
+        </div>
+        <div class="expandable-content">
+          <form action="/profile/change-email" method="POST">
+            <div class="form-group">
+              <label for="current-email">当前邮箱:</label>
+              <input type="email" id="current-email" name="currentEmail" required>
+            </div>
+            <div class="form-group">
+              <label for="new-email">新邮箱:</label>
+              <input type="email" id="new-email" name="newEmail" required>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">修改邮箱</button>
+            </div>
+          </form>
+        </div>
       </div>
       
       <!-- 注销账户 -->
-      <div class="form-section">
-        <h2>注销账户</h2>
-        <p>注销账户后，您的所有数据将被永久删除，无法恢复。请谨慎操作。</p>
-        <form action="/profile/delete-account" method="POST" onsubmit="return confirm('确定要注销账户吗？此操作不可恢复。');">
-          <div class="form-group">
-            <label for="confirm-username">请输入用户名确认:</label>
-            <input type="text" id="confirm-username" name="confirmUsername" required>
-          </div>
-          <div class="form-actions">
-            <button type="submit" class="btn btn-danger">注销账户</button>
-          </div>
-        </form>
+      <div class="expandable-section">
+        <div class="expandable-header">
+          <h2>注销账户</h2>
+          <span class="expandable-icon">▼</span>
+        </div>
+        <div class="expandable-content">
+          <p>注销账户后，您的所有数据将被永久删除，无法恢复。请谨慎操作。</p>
+          <form action="/profile/delete-account" method="POST" id="delete-account-form">
+            <div class="form-group">
+              <label for="confirm-username">请输入用户名确认:</label>
+              <input type="text" id="confirm-username" name="confirmUsername" required>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-danger">注销账户</button>
+            </div>
+          </form>
+        </div>
       </div>
+      
+  
     </div>
   </div>
+  
+  <script>
+    // 展开/折叠功能
+    function toggleExpand(element) {
+      element.classList.toggle('expanded');
+    }
+    
+    // 页面加载完成后绑定事件监听器
+    document.addEventListener('DOMContentLoaded', function() {
+      // 绑定展开/折叠事件
+      const headers = document.querySelectorAll('.expandable-header');
+      headers.forEach(header => {
+        header.addEventListener('click', function() {
+          toggleExpand(this.parentElement);
+        });
+      });
+      
+      // 绑定注销账户表单的提交事件
+      const deleteForm = document.getElementById('delete-account-form');
+      if (deleteForm) {
+        deleteForm.addEventListener('submit', function(e) {
+          if (!confirm('确定要注销账户吗？此操作不可恢复。')) {
+            e.preventDefault();
+          }
+        });
+      }
+    });
+  </script>
 </body>
 </html>
