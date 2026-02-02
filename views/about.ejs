@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>关于 - 11</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    header {
+      background-color: #4a6fa5;
+      color: white;
+      padding: 15px 0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+    }
+    
+    .logo {
+      font-size: 24px;
+      font-weight: bold;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+    
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+    }
+    
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .btn {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #4a6fa5;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 14px;
+    }
+    
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+    
+    .main-container {
+      flex: 1;
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 20px;
+    }
+    
+    .about-container {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 30px;
+      margin-bottom: 20px;
+    }
+    
+    .about-header {
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    
+    .about-header h1 {
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+    
+    .about-info {
+      margin-bottom: 40px;
+    }
+    
+    .about-info h2 {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 20px;
+      border-left: 4px solid #4a6fa5;
+      padding-left: 10px;
+    }
+    
+    .info-item {
+      display: flex;
+      margin-bottom: 15px;
+    }
+    
+    .info-label {
+      width: 120px;
+      font-weight: bold;
+      color: #666;
+    }
+    
+    .info-value {
+      flex: 1;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <nav>
+      <div class="logo">11</div>
+      <div class="nav-links">
+        <a href="/chat">聊天</a>
+        <a href="/chat/recharge">充值</a>
+        <a href="/profile">我的</a>
+        <a href="/about">关于</a>
+        <% if (user.isAdmin) { %>
+        <a href="/admin">管理员</a>
+        <% } %>
+        <div class="user-info">
+          <span>欢迎, <%= user.username %></span>
+          <a href="/logout" class="btn btn-sm">登出</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  
+  <div class="main-container">
+    <div class="about-container">
+      <div class="about-header">
+        <h1>关于</h1>
+      </div>
+      
+      <div class="about-info">
+        <h2>版本信息</h2>
+        <div class="info-item">
+          <div class="info-label">应用名称:</div>
+          <div class="info-value">11</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">版本号:</div>
+          <div class="info-value">1.2.1</div>
+        </div>
+        <div class="info-item">
+          <div class="info-label">所有权:</div>
+          <div class="info-value">11</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
