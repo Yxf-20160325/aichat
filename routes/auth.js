@@ -25,4 +25,13 @@ router.post('/login', passport.authenticate('local', {
 // 登出
 router.get('/logout', authController.logout);
 
+// 关于页面
+router.get('/about', (req, res) => {
+  if (!req.user) {
+    req.flash('error_msg', '请先登录');
+    return res.redirect('/login');
+  }
+  res.render('about', { user: req.user });
+});
+
 module.exports = router;
